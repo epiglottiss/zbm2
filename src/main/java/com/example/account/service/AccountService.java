@@ -36,8 +36,7 @@ public class AccountService {
      */
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         validateCreateAccount(accountUser);
         String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
@@ -54,6 +53,11 @@ public class AccountService {
                         .registeredAt(LocalDateTime.now())
                         .build()
                 ));
+    }
+
+    private AccountUser getAccountUser(Long userId) {
+        return accountUserRepository.findById(userId)
+                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
     }
 
     private void validateCreateAccount(AccountUser accountUser) {
@@ -74,8 +78,7 @@ public class AccountService {
 
     @Transactional
     public AccountDto deleteAccount(Long userId, String accountNumber) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
@@ -103,8 +106,7 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> getAccountByUserId(Long userId) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
         List<Account> accounts = accountRepository.findByAccountUser(accountUser);
 
         return accounts.stream()
