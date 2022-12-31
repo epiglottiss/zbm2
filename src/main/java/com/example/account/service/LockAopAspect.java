@@ -1,5 +1,6 @@
 package com.example.account.service;
 
+import com.example.account.aop.AccountLockIdInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,18 +13,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class LockAopAspect {
+    private final LockService lockService;
 
     //around는 시작과 끝에 둘러 싸면서 원하는 동작 부여
-    @Around("@annotation(com.example.account.aop.AccountLock)")
+    @Around("@annotation(com.example.account.aop.AccountLock) && args(request)")
     public Object aroundMethod(
-            ProceedingJoinPoint pjp
+            ProceedingJoinPoint pjp,
+            AccountLockIdInterface request
     ) throws Throwable {
         // lock 취득 시도
-
+        lockService.lock(request.getAccountNumber());
         try{
             return pjp.proceed();
         }finally {
             // lock 해제
+            lockService.unlock(request.getAccountNumber());
         }
     }
 

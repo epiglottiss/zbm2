@@ -4,7 +4,6 @@ import com.example.account.domain.Account;
 import com.example.account.dto.AccountInfo;
 import com.example.account.dto.DeleteAccount;
 import com.example.account.service.AccountService;
-import com.example.account.service.RedisTestService;
 import com.example.account.dto.CreateAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,6 @@ public class AccountController {
     //컨트롤러는 service만 접속
     //service 는 Repository로 접속
     private final AccountService accountService;
-    private final RedisTestService redisTestService;
 
     @PostMapping("/account")
     public CreateAccount.Response createAccount(
@@ -56,13 +54,6 @@ public class AccountController {
                 .collect(Collectors.toList());
 
     }
-
-    @GetMapping("/get-lock")
-    public String getLock() {
-        return redisTestService.getLock();
-    }
-
-
     @GetMapping("/account/{id}")
     public Account getAccount(
             @PathVariable Long id) {
