@@ -102,6 +102,9 @@ public class TransactionService {
 
         account.cancelBalance(amount);
 
+        transaction.setTransactionType(TransactionType.USE_CANCELED);
+        transactionRepository.save(transaction);
+
         return TransactionDto.fromEntity(
                 saveAndGetTransaction(CANCEL, S, amount, account));
     }
@@ -115,6 +118,9 @@ public class TransactionService {
         }
         if (transaction.getTransactedAt().isBefore(LocalDateTime.now().minusYears(1))) {
             throw new AccountException(ErrorCode.TOO_OLD_ORDER_TO_CANCEL);
+        }
+        if(transaction.getTransactionType() == TransactionType.USE_CANCELED){
+            throw new AccountException(ErrorCode.TRANSACTION_ALREADY_CANCELED);
         }
     }
 

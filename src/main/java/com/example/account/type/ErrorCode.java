@@ -19,6 +19,7 @@ public enum ErrorCode {
     TRANSACTION_NOT_FOUND("해당 거래가 없습니다."),
     TRANSACTION_ACCOUNT_UN_MATCH("이 거래는 해당 계좌에서 발생하지 않았습니다."),
     TOO_OLD_ORDER_TO_CANCEL("1년이 지난 거래는 취소가 불가능합니다."),
+    TRANSACTION_ALREADY_CANCELED("이미 취소된 거래입니다."),
     INVALID_REQUEST("잘못된 요청입니다."),
     CANCEL_MUST_FULLY("부분취소는 허용되지 않습니다.");
     private final String description;
